@@ -12,11 +12,14 @@ curl_setopt($curl, CURLOPT_URL, $starred_url);
 curl_setopt($curl, CURLOPT_ENCODING, "");
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_HEADER, true);
+curl_setopt($curl, CURLOPT_USERAGENT,'GitHub Stars Alfred workflow for: ' . $user_name );
 $resp = curl_exec($curl);
 
 $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-$header = substr($resp, 0, $header_size);
-$resp = substr($resp, $header_size);
+$header      = substr($resp, 0, $header_size);
+$resp        = substr($resp, $header_size);
+$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
 
 curl_close($curl);
 
@@ -28,6 +31,21 @@ if (preg_match('/X-RateLimit-Remaining: ([0-9]+)/', $header, $m)) {
 
 $data = json_decode($resp, true);
 $xml = "<?xml version=\"1.0\"?>\n<items>\n";
+
+if (200 !== (int) $http_status) {
+
+
+    $xml .= "<item arg=\"http://developer.github.com/v3/#rate-limiting\">\n";
+	$xml .= "<title>GitHub Response Error (" . $http_status . ")</title>\n";
+	$xml .= "<subtitle>" . $resp .  "</subtitle>\n";
+	$xml .= "<icon>icon.png</icon>\n";
+	$xml .= "</item>\n";
+
+	$xml .="</items>";
+
+	echo $xml;
+	return;
+}
 
 
 //
