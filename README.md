@@ -10,7 +10,7 @@ Installation
 
 [Download the Workflow here](https://github.com/stroebjo/alfred-github-stars/releases). Then type this command into Alfred to set your GitHub username: `ghsset user <username>`.
 
-I used the public GitHub API wich currently limits anonymous request to 60 calls per hour. So you might experience some outages with heavy usage. If this is a no go for you should probably check out [this GitHub workflow](https://github.com/gharlan/alfred-github-workflow) which is also much more powerfull.
+I used the public GitHub API wich currently limits anonymous request to 60 calls per hour. As of now the workflow features a simple cache, the GitHub Stars will be cached for 24 hours after the first request. You can change the time inside of the `app.php`.
 
 Credits
 -------
