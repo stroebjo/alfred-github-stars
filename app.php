@@ -102,7 +102,7 @@ foreach ($data as $star){
 
 	if (!($query_matched === false) ) {
 		$icon_url = $star['owner']['avatar_url'];
-		$icon     = 'icons/' . $star['owner']['gravatar_id'] . '.png';
+		$icon     = 'icons/' . $star['id'] . '.png';
 
 		if (!is_file($icon)) {
 			file_put_contents($icon, file_get_contents($icon_url));
