@@ -3,19 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string></string>
+	<string>de.jonathanstroebele.alfred-github-stars</string>
+	<key>category</key>
+	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
 		<key>59C8DE58-556F-41BA-BEA8-1B6ADDDE7C91</key>
 		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>B70420A9-10C8-47AD-879E-C4752A2B4ED9</string>
-				<key>modifiers</key>
-				<integer>262144</integer>
-				<key>modifiersubtext</key>
-				<string>Copy clone URL to clipboard.</string>
-			</dict>
 			<dict>
 				<key>destinationuid</key>
 				<string>9FC2C605-58D7-45C0-9349-92F55144CC6A</string>
@@ -23,6 +17,18 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B70420A9-10C8-47AD-879E-C4752A2B4ED9</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Copy clone URL to clipboard.</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -31,6 +37,8 @@
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string>Copy URL to clipboard.</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>9DE421A1-BB02-42CC-AA72-E6CA76F110B8</key>
@@ -42,6 +50,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -58,28 +68,10 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>
-
-$clone_url = 'git clone ' . '{query}' . '.git';
-exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
-				<key>type</key>
-				<integer>1</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.script</string>
-			<key>uid</key>
-			<string>B70420A9-10C8-47AD-879E-C4752A2B4ED9</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>plusspaces</key>
-				<false/>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
 				<key>url</key>
 				<string>{query}</string>
 				<key>utf8</key>
@@ -90,7 +82,33 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<key>uid</key>
 			<string>9FC2C605-58D7-45C0-9349-92F55144CC6A</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>
+
+$clone_url = 'git clone ' . '{query}' . '.git';
+exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B70420A9-10C8-47AD-879E-C4752A2B4ED9</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -99,27 +117,43 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
 			<string>42F3DC13-A9DE-4BAB-A869-7C63EA94FF8D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>keyword</key>
 				<string>ghs</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
 				<key>runningsubtext</key>
 				<string>fetching…</string>
 				<key>script</key>
 				<string>php -f app.php "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>subtext</key>
 				<string>Repositories</string>
 				<key>title</key>
@@ -134,7 +168,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<key>uid</key>
 			<string>59C8DE58-556F-41BA-BEA8-1B6ADDDE7C91</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -155,15 +189,21 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<key>uid</key>
 			<string>9DE421A1-BB02-42CC-AA72-E6CA76F110B8</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>echo {query} &gt; userid.txt</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -172,7 +212,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<key>uid</key>
 			<string>02314226-72F1-4127-8E97-0350CC3D4A08</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -181,35 +221,49 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 	<dict>
 		<key>02314226-72F1-4127-8E97-0350CC3D4A08</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>340</real>
 		</dict>
 		<key>42F3DC13-A9DE-4BAB-A869-7C63EA94FF8D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
 		<key>59C8DE58-556F-41BA-BEA8-1B6ADDDE7C91</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
 		<key>9DE421A1-BB02-42CC-AA72-E6CA76F110B8</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>340</real>
 		</dict>
 		<key>9FC2C605-58D7-45C0-9349-92F55144CC6A</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
-			<real>100</real>
+			<integer>20</integer>
 		</dict>
 		<key>B70420A9-10C8-47AD-879E-C4752A2B4ED9</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>90</real>
 		</dict>
 	</dict>
+	<key>version</key>
+	<string>1.3</string>
 	<key>webaddress</key>
 	<string>http://jonathanstroebele.de</string>
 </dict>
