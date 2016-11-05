@@ -52,7 +52,7 @@ if (file_exists('cache.json') && filemtime('cache.json') > (time() - $cache_tres
 			$json        = array_merge($json, $json_loop);
 		}
 	}
-	
+
 	curl_close($curl);
 
 	// cache response
@@ -114,23 +114,40 @@ foreach ($data as $star){
 	$title    = $star['name'];
 	$subtitle = $star['description'];
 
-	$search_string = $star["full_name"] . ' ' . $star['description'];
-	$query_matched = stripos($search_string, $query);
+	if ($query) {
 
-	if (!($query_matched === false) ) {
-		$icon_url = $star['owner']['avatar_url'];
-		$icon     = 'icons/' . $star['id'] . '.png';
 
-		if (!is_file($icon)) {
-			file_put_contents($icon, file_get_contents($icon_url));
+		$search_string = $star["full_name"] . ' ' . $star['description'];
+		$query_matched = stripos($search_string, $query);
+
+		if ($query_matched === false) {
+			continue;
 		}
 
-	    $xml .= "<item arg=\"$url\">\n";
-		$xml .= "<title>$title</title>\n";
-		$xml .= "<subtitle>$subtitle</subtitle>\n";
-		$xml .= "<icon>$icon</icon>\n";
-		$xml .= "</item>\n";
 	}
+
+	$icon_url = $star['owner']['avatar_url'];
+	$icon     = 'icons/' . $star['id'] . '.png';
+
+	if (!is_file($icon)) {
+		$fp = fopen ($icon, 'w+');
+
+		$ch = curl_init($icon_url);
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 1000);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+		curl_exec($ch);
+
+		curl_close($ch);
+		fclose($fp);
+	}
+
+	$xml .= "<item arg=\"$url\">\n";
+	$xml .= "<title>$title</title>\n";
+	$xml .= "<subtitle>$subtitle</subtitle>\n";
+	$xml .= "<icon>$icon</icon>\n";
+	$xml .= "</item>\n";
 }
 
 $xml .="</items>";
