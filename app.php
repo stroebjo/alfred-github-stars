@@ -69,16 +69,32 @@ if (file_exists('cache.json') && filemtime('cache.json') > (time() - $cache_tres
 
 
 $data = $json;
-$xml = "<?xml version=\"1.0\"?>\n<items>\n";
+$xml  = "<?xml version=\"1.0\"?>\n<items>\n";
 
 //
 // Github API returened some sort of error.
 //
 if (200 !== (int) $http_status) {
-
-    $xml .= "<item arg=\"http://developer.github.com/v3/#rate-limiting\">\n";
+    $xml .= "<item arg=\"" . $data['documentation_url'] . "\">\n";
 	$xml .= "<title>GitHub Response Error (" . $http_status . ")</title>\n";
-	$xml .= "<subtitle>" . $resp .  "</subtitle>\n";
+	$xml .= "<subtitle>" . $data['message'] .  "</subtitle>\n";
+	$xml .= "<icon>icon.png</icon>\n";
+	$xml .= "</item>\n";
+
+	$xml .="</items>";
+
+	echo $xml;
+	return;
+}
+
+//
+// Also check for presence of `message` key, if HTTP Status
+// code was not set to an error.
+//
+if (isset($data['message'])) {
+    $xml .= "<item arg=\"" . $data['documentation_url'] . "\">\n";
+	$xml .= "<title>GitHub Response Error (" . $http_status . ")</title>\n";
+	$xml .= "<subtitle>" . $data['message'] .  "</subtitle>\n";
 	$xml .= "<icon>icon.png</icon>\n";
 	$xml .= "</item>\n";
 
