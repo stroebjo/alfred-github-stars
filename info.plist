@@ -161,8 +161,8 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 	<key>readme</key>
 	<string># Variables
 
-- `username` shpudl be set to your GitHub userame
-- `cache_ttl` is the amount of times in seconds until the Workflow refetched your stars from GitHub.</string>
+- `username` should be set to your GitHub username
+- `cache_ttl` is the amount of times in seconds until the Workflow refetches your stars from GitHub.</string>
 	<key>uidata</key>
 	<dict>
 		<key>42F3DC13-A9DE-4BAB-A869-7C63EA94FF8D</key>
