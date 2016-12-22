@@ -15,13 +15,15 @@ if (empty($_ENV['username'])) {
 
 $cache_path = $_ENV['alfred_workflow_cache'];
 $cache_response = $cache_path . '/cache.json';
+$cache_icons = $cache_path . '/icons/';
 
 // check first if caching directory exists.
-if (!is_dir(dirname($cache_path))) {
+if (!is_dir($cache_path)) {
 	mkdir($cache_path);
-	mkdir($cache_path . '/icons/');
 }
-
+if (!is_dir($cache_icons )) {
+	mkdir($cache_icons);
+}
 
 $username    = trim($_ENV['username']); // set inside workflow variables
 $starred_url = sprintf('https://api.github.com/users/%s/starred', $username);
@@ -97,7 +99,7 @@ if (200 !== (int) $http_status OR isset($resp_json['message'])) {
 }
 
 // Search through the results.
-foreach ($resp_json as $star){
+foreach ($resp_json as $i => $star){
 	$url      = $star['html_url'];
 	$title    = $star['name'];
 	$subtitle = $star['description'];
@@ -112,7 +114,7 @@ foreach ($resp_json as $star){
 	}
 
 	$icon_url = $star['owner']['avatar_url'];
-	$icon     = $cache_path . '/icons/' . $star['id'] . '.png';
+	$icon     = $cache_icons . $star['id'] . '.png';
 
 	if (!is_file($icon)) {
 		$fp = fopen ($icon, 'w+');
@@ -126,6 +128,25 @@ foreach ($resp_json as $star){
 
 		curl_close($ch);
 		fclose($fp);
+
+		echo json_encode([
+			'rerun' => .1,
+			'variables' => [
+				//'resp_json' => $resp_json,
+				'amount'    => count($resp_json),
+				'current'   => $i,
+			],
+			'items' => [
+				[
+					"arg"      => null,
+					"title"    => sprintf("Downloading GitHub avatars…"),
+					"subtitle" => sprintf('Downloading image %s of %s', $i + 1, count($resp_json)),
+				],
+			],
+		]);
+
+		exit(0);
+
 	}
 
 	$items['items'][] = [
