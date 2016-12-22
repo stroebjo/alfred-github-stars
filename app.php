@@ -1,37 +1,54 @@
 <?php
 
-// presets
-$api_remain_limit = true;
-$query            = trim($argv[1]);
-$http_status      = 200;
-$cache_treshold   = 3600 * 24; // in seconds
+// check for username
+if (empty($_ENV['username'])) {
+	echo json_encode([
+		'items' => [[
+			"arg"      => "https://www.alfredapp.com/help/workflows/advanced/variables/",
+			"title"    => "Please set your GitHub username first",
+			"subtitle" => "Hit enter to open an introduction to variables."
+		],],
+	]);
+
+	exit(1);
+}
+
+$cache_path = $_ENV['alfred_workflow_cache'];
+$cache_response = $cache_path . '/cache.json';
+
+// check first if caching directory exists.
+if (!is_dir(dirname($cache_path))) {
+	mkdir($cache_path);
+	mkdir($cache_path . '/icons/');
+}
+
+
+$username    = trim($_ENV['username']); // set inside workflow variables
+$starred_url = sprintf('https://api.github.com/users/%s/starred', $username);
+$cache_ttl   = (empty($_ENV['cache_ttl'])) ? 3600 * 24 : (int) $_ENV['cache_ttl']; // in seconds
+$query       = trim($argv[1]); // optional text search
+$http_status = 200; // default status code, so when using cache it doesn't run into error handling
 
 
 // check if we hafe a cache
 // if not load stars from github API
-if (file_exists('cache.json') && filemtime('cache.json') > (time() - $cache_treshold)) {
-	$json = json_decode(file_get_contents('cache.json'), true);
+if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cache_ttl)) {
+	$resp_json = json_decode(file_get_contents($cache_response), true);
 } else {
-	// get starred URL
-	$id          = file_get_contents('userid.txt');
-	$user_name   = explode("\n",$id,2);
-	$starred_url = 'https://api.github.com/users/' . $user_name[0] . '/starred';
-
 	$curl = curl_init();
+
 	curl_setopt($curl, CURLOPT_URL, $starred_url);
 	curl_setopt($curl, CURLOPT_ENCODING, "");
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curl, CURLOPT_HEADER, true);
-	curl_setopt($curl, CURLOPT_USERAGENT,'GitHub Stars Alfred workflow for: ' . $user_name );
+	curl_setopt($curl, CURLOPT_USERAGENT, 'GitHub Stars Alfred workflow for: ' . $username );
 	$resp = curl_exec($curl);
 
 	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 	$header      = substr($resp, 0, $header_size);
 	$resp        = substr($resp, $header_size);
 	$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-
-	$json = json_decode($resp, true);
+	$resp_json   = json_decode($resp, true);
 
 	// check if there are headers indication pagination
 	// => make multiple requests to fetch ALL the stars.
@@ -45,105 +62,57 @@ if (file_exists('cache.json') && filemtime('cache.json') > (time() - $cache_tres
 
 			$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 			$header      = substr($resp, 0, $header_size);
-			$resp        = substr($resp, $header_size);
-			$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			$loop        = substr($resp, $header_size);
 
-			$json_loop   = json_decode($resp, true);
-			$json        = array_merge($json, $json_loop);
+			$loop_json   = json_decode($loop, true);
+			$json        = array_merge($resp_json, $loop_json);
 		}
 	}
 
 	curl_close($curl);
 
 	// cache response
-	file_put_contents('cache.json', json_encode($json, JSON_PRETTY_PRINT));
-
-
-	// determine rate limit reset
-	$api_remain_limit = 60;
-	if (preg_match('/X-RateLimit-Remaining: ([0-9]+)/', $header, $m)) {
-		$api_remain_limit = $m[1];
+	if ($http_status == 200) {
+		file_put_contents($cache_response, json_encode($json, JSON_PRETTY_PRINT));
 	}
 }
 
+$items = [];
 
-
-$data = $json;
-$xml  = "<?xml version=\"1.0\"?>\n<items>\n";
-
-//
 // Github API returened some sort of error.
-//
-if (200 !== (int) $http_status) {
-    $xml .= "<item arg=\"" . $data['documentation_url'] . "\">\n";
-	$xml .= "<title>GitHub Response Error (" . $http_status . ")</title>\n";
-	$xml .= "<subtitle>" . $data['message'] .  "</subtitle>\n";
-	$xml .= "<icon>icon.png</icon>\n";
-	$xml .= "</item>\n";
-
-	$xml .="</items>";
-
-	echo $xml;
-	return;
-}
-
-//
 // Also check for presence of `message` key, if HTTP Status
 // code was not set to an error.
-//
-if (isset($data['message'])) {
-    $xml .= "<item arg=\"" . $data['documentation_url'] . "\">\n";
-	$xml .= "<title>GitHub Response Error (" . $http_status . ")</title>\n";
-	$xml .= "<subtitle>" . $data['message'] .  "</subtitle>\n";
-	$xml .= "<icon>icon.png</icon>\n";
-	$xml .= "</item>\n";
+if (200 !== (int) $http_status OR isset($resp_json['message'])) {
+	echo json_encode([
+		'items' => [
+			[
+				"arg"      => $resp_json['documentation_url'],
+				"title"    => sprintf("GitHub Response Error (%s)", $http_status),
+				"subtitle" => $resp_json['message'],
+			],
+		],
+	]);
 
-	$xml .="</items>";
-
-	echo $xml;
-	return;
+	exit(1);
 }
 
-
-//
-// If API limit is reached, print explanation.
-//
-if (!$api_remain_limit) {
-
-	preg_match('/X-RateLimit-Reset: ([0-9]+)/', $header, $m1);
-	preg_match('/X-RateLimit-Limit: ([0-9]+)/', $header, $m2);
-
-	$reset_in = (int) (($m1[1] - time()) / 60);
-
-    $xml .= "<item arg=\"http://developer.github.com/v3/#rate-limiting\">\n";
-	$xml .= "<title>API limit will reset in " . $reset_in . " minutes.</title>\n";
-	$xml .= "<subtitle>GitHub restricts the amount of request to " . $m2[1] . " calls per hour.</subtitle>\n";
-	$xml .= "<icon>icon.png</icon>\n";
-	$xml .= "</item>\n";
-}
-
-//
 // Search through the results.
-//
-foreach ($data as $star){
+foreach ($resp_json as $star){
 	$url      = $star['html_url'];
 	$title    = $star['name'];
 	$subtitle = $star['description'];
 
 	if ($query) {
-
-
 		$search_string = $star["full_name"] . ' ' . $star['description'];
 		$query_matched = stripos($search_string, $query);
 
 		if ($query_matched === false) {
 			continue;
 		}
-
 	}
 
 	$icon_url = $star['owner']['avatar_url'];
-	$icon     = 'icons/' . $star['id'] . '.png';
+	$icon     = $cache_path . '/icons/' . $star['id'] . '.png';
 
 	if (!is_file($icon)) {
 		$fp = fopen ($icon, 'w+');
@@ -159,12 +128,20 @@ foreach ($data as $star){
 		fclose($fp);
 	}
 
-	$xml .= "<item arg=\"$url\">\n";
-	$xml .= "<title>$title</title>\n";
-	$xml .= "<subtitle>$subtitle</subtitle>\n";
-	$xml .= "<icon>$icon</icon>\n";
-	$xml .= "</item>\n";
+	$items['items'][] = [
+		'arg'          => $url,
+		'quicklookurl' => $url,
+		'title'        => $title,
+		'subtitle'     => $subtitle,
+
+		'text' => [
+			'largetype' => $title,
+		],
+
+		'icon' => [
+			'path' => $icon
+		],
+	];
 }
 
-$xml .="</items>";
-echo $xml;
+echo json_encode($items);
