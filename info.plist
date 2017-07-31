@@ -119,6 +119,8 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
@@ -206,7 +208,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 		<string>username</string>
 	</array>
 	<key>version</key>
-	<string>2.0</string>
+	<string>2.1</string>
 	<key>webaddress</key>
 	<string>http://jonathanstroebele.de</string>
 </dict>
