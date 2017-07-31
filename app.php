@@ -67,7 +67,7 @@ if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cach
 			$loop        = substr($resp, $header_size);
 
 			$loop_json   = json_decode($loop, true);
-			$json        = array_merge($resp_json, $loop_json);
+			$resp_json   = array_merge($resp_json, $loop_json);
 		}
 	}
 
@@ -75,7 +75,7 @@ if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cach
 
 	// cache response
 	if ($http_status == 200) {
-		file_put_contents($cache_response, json_encode($json, JSON_PRETTY_PRINT));
+		file_put_contents($cache_response, json_encode($resp_json, JSON_PRETTY_PRINT));
 	}
 }
 
