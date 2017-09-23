@@ -26,7 +26,7 @@ if (!is_dir($cache_icons )) {
 }
 
 $username    = trim($_ENV['username']); // set inside workflow variables
-$token 	     = trim($_ENV['token']); // set inside workflow variables
+$token       = trim($_ENV['token']); // set inside workflow variables
 $starred_url = sprintf('https://api.github.com/users/%s/starred', $username);
 $cache_ttl   = (empty($_ENV['cache_ttl'])) ? 3600 * 24 : (int) $_ENV['cache_ttl']; // in seconds
 $query       = trim($argv[1]); // optional text search
