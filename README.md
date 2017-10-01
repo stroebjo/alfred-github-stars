@@ -10,7 +10,7 @@ Search through your stars with `ghs <keyword>`. Than just hit enter on a result 
 Installation
 ------------
 
-[Download the Workflow here](https://github.com/stroebjo/alfred-github-stars/releases). Then go the Workflow variables inside Alfred and set your username.
+[Download the Workflow here](https://github.com/stroebjo/alfred-github-stars/releases). Then go the Workflow variables inside Alfred and set your username. To prevent API rate limits you can also set an [API token](https://github.com/settings/tokens).
 
 I used the public GitHub API wich currently limits anonymous request to 60 calls per hour. As of now the workflow features a simple cache, the GitHub Stars will be cached for 24 hours after the first request. You can change cache duration also inside the variables pane.
 

@@ -119,6 +119,8 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
@@ -164,6 +166,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 	<string># Variables
 
 - `username` should be set to your GitHub username
+- `token` optional GitHub API Token to prevent rate limits
 - `cache_ttl` is the amount of times in seconds until the Workflow refetches your stars from GitHub.</string>
 	<key>uidata</key>
 	<dict>
@@ -200,15 +203,18 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 	<dict>
 		<key>cache_ttl</key>
 		<string>86400</string>
+		<key>token</key>
+		<string>23629b141504c361c814ba92483a5e5d102140e0</string>
 		<key>username</key>
 		<string>stroebjo</string>
 	</dict>
 	<key>variablesdontexport</key>
 	<array>
+		<string>token</string>
 		<string>username</string>
 	</array>
 	<key>version</key>
-	<string>2.1</string>
+	<string>2.2</string>
 	<key>webaddress</key>
 	<string>http://jonathanstroebele.de</string>
 </dict>
