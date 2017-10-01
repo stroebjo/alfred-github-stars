@@ -45,7 +45,11 @@ if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cach
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curl, CURLOPT_HEADER, true);
 	curl_setopt($curl, CURLOPT_USERAGENT, 'GitHub Stars Alfred workflow for: ' . $username );
-	curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $token);
+
+	if (!empty($token)) {
+		curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $token);
+	}
+
 	$resp = curl_exec($curl);
 
 	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
