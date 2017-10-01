@@ -26,6 +26,7 @@ if (!is_dir($cache_icons )) {
 }
 
 $username    = trim($_ENV['username']); // set inside workflow variables
+$token       = trim($_ENV['token']); // set inside workflow variables
 $starred_url = sprintf('https://api.github.com/users/%s/starred', $username);
 $cache_ttl   = (empty($_ENV['cache_ttl'])) ? 3600 * 24 : (int) $_ENV['cache_ttl']; // in seconds
 $query       = trim($argv[1]); // optional text search
@@ -44,6 +45,7 @@ if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cach
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curl, CURLOPT_HEADER, true);
 	curl_setopt($curl, CURLOPT_USERAGENT, 'GitHub Stars Alfred workflow for: ' . $username );
+	curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $token);
 	$resp = curl_exec($curl);
 
 	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
@@ -54,7 +56,7 @@ if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cach
 
 	// check if there are headers indication pagination
 	// => make multiple requests to fetch ALL the stars.
-	if (preg_match('/Link:.*([0-9]+)>; rel="last"/', $header, $m)) {
+	if (preg_match('/([0-9]+)>; rel="last"/', $header, $m)) {
 		$last_page = (int) $m[1];
 
 		for ($i = 2; $i <= $last_page; $i++) {
