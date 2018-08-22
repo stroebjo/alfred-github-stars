@@ -17,5 +17,5 @@ I used the public GitHub API wich currently limits anonymous request to 60 calls
 Credits
 -------
 
-Is was inspired to create this workflow after seeing Adam Simpsons [workflow to filter through StackOverflow favorties](https://github.com/asimpson/stackoverflow-favorites-alfred-workflow).
+Is was inspired to create this workflow after seeing Adam Simpsons [workflow to filter through StackOverflow favorites](https://github.com/asimpson/stackoverflow-favorites-alfred-workflow).
 
