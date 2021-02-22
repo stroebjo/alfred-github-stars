@@ -60,7 +60,7 @@ if (file_exists($cache_response) && filemtime($cache_response) > (time() - $cach
 
 	// check if there are headers indication pagination
 	// => make multiple requests to fetch ALL the stars.
-	if (preg_match('/Link: .*?page=([0-9]+)>; rel="last"/', $header, $m)) {
+	if (preg_match('/Link: .*?page=([0-9]+)>; rel="last"/i', $header, $m)) {
 		$last_page = (int) $m[1];
 
 		for ($i = 2; $i <= $last_page; $i++) {
