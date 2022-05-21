@@ -104,6 +104,8 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
 				<key>transient</key>
 				<false/>
 			</dict>
@@ -112,7 +114,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<key>uid</key>
 			<string>42F3DC13-A9DE-4BAB-A869-7C63EA94FF8D</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -121,6 +123,8 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
 				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
@@ -140,7 +144,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 				<key>runningsubtext</key>
 				<string>fetching…</string>
 				<key>script</key>
-				<string>php -f app.php "{query}"</string>
+				<string>/opt/homebrew/bin/php -f app.php "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -159,7 +163,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 			<key>uid</key>
 			<string>59C8DE58-556F-41BA-BEA8-1B6ADDDE7C91</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -204,9 +208,9 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 		<key>cache_ttl</key>
 		<string>86400</string>
 		<key>token</key>
-		<string>23629b141504c361c814ba92483a5e5d102140e0</string>
+		<string></string>
 		<key>username</key>
-		<string>stroebjo</string>
+		<string></string>
 	</dict>
 	<key>variablesdontexport</key>
 	<array>
@@ -214,7 +218,7 @@ exec('osascript -e "set the clipboard to \"' . $clone_url . '\""');</string>
 		<string>username</string>
 	</array>
 	<key>version</key>
-	<string>2.2</string>
+	<string>2.4</string>
 	<key>webaddress</key>
 	<string>http://jonathanstroebele.de</string>
 </dict>
