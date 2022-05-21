@@ -1,7 +1,7 @@
 <?php
 
 // check for username
-if (empty($_ENV['username'])) {
+if (false === getenv('username')) {
 	echo json_encode([
 		'items' => [[
 			"arg"      => "https://www.alfredapp.com/help/workflows/advanced/variables/",
@@ -13,7 +13,7 @@ if (empty($_ENV['username'])) {
 	exit(1);
 }
 
-$cache_path = $_ENV['alfred_workflow_cache'];
+$cache_path = getenv('alfred_workflow_cache');
 $cache_response = $cache_path . '/cache.json';
 $cache_icons = $cache_path . '/icons/';
 
@@ -25,10 +25,10 @@ if (!is_dir($cache_icons )) {
 	mkdir($cache_icons);
 }
 
-$username    = trim($_ENV['username']); // set inside workflow variables
-$token       = trim($_ENV['token']); // set inside workflow variables
+$username    = trim(getenv('username')); // set inside workflow variables
+$token       = trim(getenv('token')); // set inside workflow variables
 $starred_url = sprintf('https://api.github.com/users/%s/starred', $username);
-$cache_ttl   = (empty($_ENV['cache_ttl'])) ? 3600 * 24 : (int) $_ENV['cache_ttl']; // in seconds
+$cache_ttl   = (false === getenv('cache_ttl')) ? 3600 * 24 : (int) getenv('cache_ttl'); // in seconds
 $query       = trim($argv[1]); // optional text search
 $http_status = 200; // default status code, so when using cache it doesn't run into error handling
 
